@@ -53,6 +53,51 @@ The following table contains all recipes that can be mixed together here (will c
 |-------------------|-------------------|------------------:|
 |Mashed Potatoes    |Nitric Acid        |Potato essence     |
 
+#### Reaction over a Bunsen burner (gas burner)
+
+The reaction mixture in an Erlenmeyer flask (conical flask) is on top of an iron tripod,
+with the Bunsen burner below. There is a thermometer inside the flask to measure the
+solution temperature. The range of acceptable temperature is listed in a note next to the
+experiment.
+##### Input
+
+* 2 specific chemicals.
+
+* An Elrenmeyer (conical) flask
+
+* Thermometer
+
+##### UI
+
+* There is a gas control knob and an igniter button which must be pressed after the knob is
+  is set above 0 to light the flame, showing a spark and a sound effect. If the igniter 
+  button is pushed while the gas knob is set to 0, the spark effect is played. 
+  While the flame is lit, setting the knob to 0 immediately extinguishes the flame.
+  Any other setting controls the size and heat of the flame without delay.
+
+##### Suggested mechanism
+
+This mechanism is somewhat realistic, and the introduction of heat transfer and heat loss
+introduces a delay in the heating process and forces the player to be careful (or, gives
+some excuse to the infiltrator why the task failed).
+
+* The flame has an output heat that depends on the size (linear, equal steps)
+
+* The flask has a constant heat capacity, which relates its energy to its temperature. The
+  flame output directly increases the energy of the flask (continously in time).
+
+* The solutioun has a constant heat capacity, which relates its energy to its temperature.
+
+* The temperature of the solution is directly displayed by the thermometer.
+
+* Heat loss of the solution: the solution loses its energy to the environment based on how much
+  its temperature is over the room temperature (25 °C).
+
+* Heat loss of the flask: the flask loses its energy to the environment based on how much
+  its temperature is over the room temperature (25 °C).
+
+* Heat transfer between the flask and the solution: depending on the temperature difference
+  between the two, some ammount of energy is transfered to the solution.
 
 ## Experiments
 
@@ -70,40 +115,43 @@ The following table contains all recipes that can be mixed together here (will c
 
 ##### Starting the machine
 
-The following two actions are required to start the machine. They can be performed
+The following three actions are required to start the machine. They can be performed
 in any order.
 
-* Heat up the capillary chamber slowly and keep it up at a specified temperature range.
-  There is a gas control knob and an igniter button which must be pressed after the knob is
-  is set above 0 to light the flame, showing a spark and a sound effect. If the igniter 
-  button is pushed while the gas knob is set to 0, the spark effect is played. 
-  While the flame is lit, setting the knob to 0 immediately extinguishes the flame.
-  Any other setting controls the size and heat of the flame without delay.
-  The temperature of the chamber is directly controlled by the heat of the flame, but it
-  only slowly approaches that value, reaching it after about 5 seconds. 
-  A dial displays the chamber temperature and has markings for the accepted range which
-  is between 50% and 80% of the dial range. If the gas knob is fully turned up, the dial
-  will show maximum temperature (after the delay) and minimum temperature if the flame is off.
-  The gas knob is set to 0 at the start of the game.
+* Turn on gas flow by rotating the gas valve. The gas pressure set by the maintenance task
+  is displayed directly here in a gauge with the acceptable ranges overlapped
+
+* The GC-capillary is located in a chamber with electric heating elements. A knob directly adjusts
+  the heat transfered to the chamber, and the chamber loses some of its heat to the environment
+  (see the *Reaction over a Bunsen burner* task for details). The temperature is displayed by
+  a Nixie-tube display. The temperature has to be within a predefined range.
 
 * Set the detector voltage properly.
-  Another knob controls the detector voltage between 0V and 20V with discrete steps of 2V.
-  The currently set voltage is displayed in a 2-digit seven-segment display.
-  The voltage knob is set to 0V at the start of the game.
+  Voltage control knob controls the detector voltage between 0V and 20V relatively smoothly
+  (0.2 V steps), but there are no direct markings related to voltage at the knob.
+  The currently set voltage is displayed in a 3-digit Nixie-tube display.
+  The voltage knob is set to 0 at the start of the game.
   The needed value must be set exactly and can be read from a table accessible in the machine
   GUI that lists all possible ingredient mixtures and their needed voltages. This table
   contains the following values (will change):
 
 |Mixture            |Voltage|
 |-------------------|------:|
-|Potato essence     |6V     |
+|Potato essence     |6.0V   |
 
 
 
 ##### Running the experiment
 
-A button starts running the experiment if all requirements are completed. If
-any requirement is missing an appropriate visual clue is given to the player.
+If all requirements are completed, a green light lights up, if any requirement is
+missing an appropriate visual clue is given to the player, as one of the four red
+lights lights up: Temperature error, pressure error, voltage error or missing sample
+error.
+
+If the green light is on, the player can start the experiment by pulling down a lever that
+lowers a syrenge, and when pulling up the lever, the syrenge sucks in the solution,
+then rotates and injects the solution into the capillary chamber.
+
 The process needs to run for 60 seconds during which all settings must remain
 in an acceptable state, including the gas pressure maintenance task.  If one of
 them moves out of range, the machine immediately stops the process but its
@@ -114,8 +162,8 @@ keeps running if the player leaves it and the settings are also kept until
 someone else changes them.
 
 Once the process successfully finishes, the input item is consumed and a
-chromatogram printed on paper is returned in the output slot.  This item
-is unique for every different input item.
+chromatogram printed on paper (a long graph with peaks on it) is
+returned in the output slot.  This item is unique for every different input item.
 
 
 ## Maintenance Tasks
@@ -127,10 +175,31 @@ an acceptable range for tasks that are dependent on it to work.
 
 #### Gas valve
 
-Controls the gas pressure. The output pressure fluctuates randomly over time
-and can be manually adjusted to be in an acceptable state. There is also an
-on/off switch that completely cuts the gas pressure in the off position. It
-is set to "off" at the start of the game.
+Controls the gas pressure.
+
+* There is a main valve that completely cuts the gas pressure in the off position. It
+  is set to "off" at the start of the game.
+
+* There is a regulator valve that can be turned from low to high pressure state. It is
+  at the lowest pressure setting at the start of the game.
+
+##### Suggested mechanism
+
+* Output pressure: numerically, the input pressure is a number, and the setting of the
+  regulator valve is also a number. The output pressure is the sum of the two numbers,
+  however, when displaying it to the player, both input and output pressures should be
+  displayed in a logarithmic scale.
+
+* Input pressure: the fluctuation in the input pressure is implemented using a target 
+  input pressure value. Everytime the output pressure moves towards the target value,
+  preferably first stars moving slowly, then the speed increases, and as it gets closer
+  to the target value, it slows down again. Whenever the input pressure gets to close
+  enough to the target pressure, a new, random target pressure is selected, and the
+  input pressure starts to slowly move in that direction.
+
+* Input pressure possible range: the input pressure fluctuations should be wide enough
+  that no one regulator setting sould make the output pressure in the acceptable range
+  for all possible input pressures.
 
 #### Electricity
 
