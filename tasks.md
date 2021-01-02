@@ -59,21 +59,30 @@ The reaction mixture in an Erlenmeyer flask (conical flask) is on top of an iron
 with the Bunsen burner below. There is a thermometer inside the flask to measure the
 solution temperature. The range of acceptable temperature is listed in a note next to the
 experiment.
-##### Input
 
-* 2 specific chemicals.
+##### Input requirements
+
+* 2+ specific chemicals (based the current experiment description).
 
 * An Elrenmeyer (conical) flask
 
 * Thermometer
 
-##### UI
+##### The experiment and its UI
 
 * There is a gas control knob and an igniter button which must be pressed after the knob is
   is set above 0 to light the flame, showing a spark and a sound effect. If the igniter 
   button is pushed while the gas knob is set to 0, the spark effect is played. 
   While the flame is lit, setting the knob to 0 immediately extinguishes the flame.
   Any other setting controls the size and heat of the flame without delay.
+
+* When the solution reaches a certain temperature, the chemical reaction starts, the
+  progress of the reaction can be seen by the subtle change in the solution color. When the
+  reaction is finished, a sudden, clearly visible color change occurs. After switching off
+  the burner, the flask containing the required chemical mixture can be accessed as an object.
+
+* When the solution reaches a certain, higher temperature, the solution suddenly starts to boil
+  and if the temperature is too high for too long, it turns to black, and the experiment fails.
 
 ##### Suggested mechanism
 
@@ -98,6 +107,19 @@ some excuse to the infiltrator why the task failed).
 
 * Heat transfer between the flask and the solution: depending on the temperature difference
   between the two, some ammount of energy is transfered to the solution.
+
+* Reaction: over the threshold temperature, the reaction starts, and can be tracked as a
+  percentage process. The speed of the reaction might be temperature dependent, i.e., higher
+  temperature faster process, but higher risk of failiure.
+
+* Boiling: over a higher threshold temperature, a second reaction starts which can be tracked
+  as a percentage and might be temperature dependent, i.e., the higher one shoots over the
+  threshold, the quicker the experiment fails, and when this percentage reaches a threshold,
+  the experiment fails.
+
+##### Output
+
+* One Erlenmeyer flask with the required chemical mixture in it.
 
 ## Experiments
 
@@ -164,6 +186,10 @@ someone else changes them.
 Once the process successfully finishes, the input item is consumed and a
 chromatogram printed on paper (a long graph with peaks on it) is
 returned in the output slot.  This item is unique for every different input item.
+
+##### Output
+
+* One chromatogram displaying the composition of the input mixture.
 
 
 ## Maintenance Tasks
